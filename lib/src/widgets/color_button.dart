@@ -17,6 +17,7 @@ const _buttonSize = 48.0;
 class ColorButton extends StatefulWidget {
   final Color color;
   final double size;
+  final Widget? child;
   final BoxDecoration? decoration;
   final BoxShape boxShape;
   final ColorPickerConfig config;
@@ -33,6 +34,7 @@ class ColorButton extends StatefulWidget {
   const ColorButton({
     required this.color,
     required this.onColorChanged,
+    this.child,
     this.onSwatchesChanged,
     this.elevation = 3,
     this.decoration,
@@ -82,22 +84,23 @@ class _ColorButtonState extends State<ColorButton> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) => GestureDetector(
         onTapDown: (details) => _colorPick(context, details),
-        child: Material(
-          elevation: widget.elevation,
-          shape: widget.boxShape == BoxShape.circle
-              ? const CircleBorder()
-              : const RoundedRectangleBorder(),
-          child: Container(
-            width: widget.size,
-            height: widget.size,
-            decoration: widget.decoration ??
-                BoxDecoration(
-                  shape: widget.boxShape,
-                  color: widget.color,
-                  border: Border.all(width: 4, color: Colors.white),
-                ),
-          ),
-        ),
+        child: widget.child ??
+            Material(
+              elevation: widget.elevation,
+              shape: widget.boxShape == BoxShape.circle
+                  ? const CircleBorder()
+                  : const RoundedRectangleBorder(),
+              child: Container(
+                width: widget.size,
+                height: widget.size,
+                decoration: widget.decoration ??
+                    BoxDecoration(
+                      shape: widget.boxShape,
+                      color: widget.color,
+                      border: Border.all(width: 4, color: Colors.white),
+                    ),
+              ),
+            ),
       );
 
   void _colorPick(BuildContext context, TapDownDetails details) async {
