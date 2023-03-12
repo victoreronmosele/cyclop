@@ -1,10 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import '../theme.dart';
 import '../utils.dart';
@@ -66,7 +63,7 @@ class _ColorButtonState extends State<ColorButton> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     color = widget.color;
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -77,7 +74,7 @@ class _ColorButtonState extends State<ColorButton> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -114,7 +111,7 @@ class _ColorButtonState extends State<ColorButton> with WidgetsBindingObserver {
 
     pickerOverlay = _buildPickerOverlay(offset, rootContext);
 
-    Overlay.of(rootContext)?.insert(pickerOverlay!);
+    Overlay.of(rootContext).insert(pickerOverlay!);
 
     return Future.value(widget.color);
   }
@@ -178,9 +175,9 @@ class _ColorButtonState extends State<ColorButton> with WidgetsBindingObserver {
       EyeDrop.of(context).capture(context, (value) {
         hidden = false;
         _onEyePick(value);
-      });
+      }, null);
     } catch (err) {
-      print('ERROR !!! _buildPickerOverlay $err');
+      debugPrint('ERROR !!! _buildPickerOverlay $err');
     }
   }
 

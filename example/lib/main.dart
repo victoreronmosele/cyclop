@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cyclop/cyclop.dart';
 
@@ -31,6 +29,8 @@ class _MainScreenState extends State<MainScreen> {
 
   Set<Color> swatches = Colors.primaries.map((e) => Color(e.value)).toSet();
 
+  final ValueNotifier<Color?> hoveredColor = ValueNotifier<Color?>(null);
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -49,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text('Cyclop Demo',
-            style: textTheme.headline6?.copyWith(color: appbarTextColor)),
+            style: textTheme.titleLarge?.copyWith(color: appbarTextColor)),
         backgroundColor: appbarColor,
         actions: [
           Padding(
@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               Text(
                 'Select the background & appbar colors',
-                style: textTheme.headline6?.copyWith(color: bodyTextColor),
+                style: textTheme.titleLarge?.copyWith(color: bodyTextColor),
               ),
               _buildButtons(),
               Center(child: Image.asset('images/img.png')),
@@ -125,9 +125,22 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
           ),
-          EyedropperButton(
-            icon: Icons.colorize,
-            onColor: (value) => setState(() => backgroundColor = value),
+          Row(
+            children: [
+              EyedropperButton(
+                icon: Icons.colorize,
+                onColor: (value) => setState(() => backgroundColor = value),
+                onColorChanged: (value) => hoveredColor.value = value,
+              ),
+              ValueListenableBuilder<Color?>(
+                valueListenable: hoveredColor,
+                builder: (context, value, _) => Container(
+                  color: value ?? Colors.transparent,
+                  width: 24,
+                  height: 24,
+                ),
+              )
+            ],
           ),
           Center(
             child: ElevatedButton(

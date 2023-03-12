@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
@@ -27,6 +26,8 @@ class _EyeDropperModel {
   Color selectedColor = Colors.black;
 
   ValueChanged<Color>? onColorSelected;
+
+  ValueChanged<Color>? onColorChanged;
 
   _EyeDropperModel();
 }
@@ -74,6 +75,7 @@ class EyeDrop extends InheritedWidget {
         data.eyeOverlayEntry!.remove();
         data.eyeOverlayEntry = null;
         data.onColorSelected = null;
+        data.onColorChanged = null;
       } catch (err) {
         debugPrint('ERROR !!! _onPointerUp $err');
       }
@@ -91,16 +93,21 @@ class EyeDrop extends InheritedWidget {
       data.hoverColor = getPixelColor(data.snapshot!, offset);
       data.hoverColors = getPixelColors(data.snapshot!, offset);
     }
+
+    if (data.onColorChanged != null) {
+      data.onColorChanged!(data.hoverColors.center);
+    }
   }
 
-  void capture(
-      BuildContext context, ValueChanged<Color> onColorSelected) async {
+  void capture(BuildContext context, ValueChanged<Color> onColorSelected,
+      ValueChanged<Color>? onColorChanged) async {
     final renderer =
         captureKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
 
     if (renderer == null) return;
 
     data.onColorSelected = onColorSelected;
+    data.onColorChanged = onColorChanged;
 
     data.snapshot = await repaintBoundaryToImage(renderer);
 
@@ -113,7 +120,7 @@ class EyeDrop extends InheritedWidget {
         cursorPosition: data.cursorPosition,
       ),
     );
-    Overlay.of(context)?.insert(data.eyeOverlayEntry!);
+    Overlay.of(context).insert(data.eyeOverlayEntry!);
   }
 
   @override
